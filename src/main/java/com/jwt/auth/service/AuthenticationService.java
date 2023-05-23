@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -57,6 +59,8 @@ public class AuthenticationService {
 
         AuthenticationResponse authenticationResponse = authenticationResponse(user); // creating an AuthenticationResponse object to fetch the token
 
+        revokeAllUserTokens(user);
+
         saveUserToken(user, authenticationResponse); // we are saving the token in the database and fetching the token from authenticationResponse
 
         return authenticationResponse; // we are returning an AuthenticationResponse object
@@ -67,6 +71,21 @@ public class AuthenticationService {
         return AuthenticationResponse.builder() // we are building an AuthenticationResponse object and returning it
                 .token(jwtToken)
                 .build();
+    }
+
+    private void revokeAllUserTokens(User user){
+        List<Token> validUserTokens = tokenRepository.findAllValidTokensByUserId(user.getId()); // we are fetching all the valid tokens of the user
+
+        if(validUserTokens.isEmpty()){
+            return;
+        }
+
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+
+        tokenRepository.saveAll(validUserTokens);
     }
 
     private void saveUserToken(User savedUser, AuthenticationResponse authenticationResponse) { // this method is used to save the token in the database
