@@ -1,12 +1,11 @@
 package com.jwt.auth.service;
 
-import com.jwt.auth.config.JwtService;
 import com.jwt.auth.dto.AuthenticationRequest;
 import com.jwt.auth.dto.AuthenticationResponse;
 import com.jwt.auth.dto.RegistrationRequest;
-import com.jwt.auth.entity.Role;
+import com.jwt.auth.entity.enums.Role;
 import com.jwt.auth.entity.Token;
-import com.jwt.auth.entity.TokenType;
+import com.jwt.auth.entity.enums.TokenType;
 import com.jwt.auth.entity.User;
 import com.jwt.auth.repository.TokenRepository;
 import com.jwt.auth.repository.UserRepository;

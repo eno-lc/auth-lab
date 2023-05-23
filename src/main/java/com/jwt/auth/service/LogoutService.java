@@ -1,4 +1,4 @@
-package com.jwt.auth.config;
+package com.jwt.auth.service;
 
 import com.jwt.auth.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;

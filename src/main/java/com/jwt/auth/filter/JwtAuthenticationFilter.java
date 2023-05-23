@@ -1,7 +1,7 @@
-package com.jwt.auth.config;
+package com.jwt.auth.filter;
 
-import com.jwt.auth.entity.User;
 import com.jwt.auth.repository.TokenRepository;
+import com.jwt.auth.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

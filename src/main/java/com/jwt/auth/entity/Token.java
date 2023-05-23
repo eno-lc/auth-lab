@@ -1,5 +1,6 @@
 package com.jwt.auth.entity;
 
+import com.jwt.auth.entity.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

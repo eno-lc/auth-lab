@@ -1,4 +1,4 @@
-package com.jwt.auth.entity;
+package com.jwt.auth.entity.enums;
 
 public enum TokenType {
     BEARER

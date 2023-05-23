@@ -1,4 +1,4 @@
-package com.jwt.auth.config;
+package com.jwt.auth.service;
 
 
 import io.jsonwebtoken.Claims;
