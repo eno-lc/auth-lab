@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "6B5970337336763979244226452948404D6351655468576D5A7134743777217A";
+    private static final String SECRET_KEY = "6B5970337336763979244226452948404D6351655468576D5A7134743777217A"; // we use the secret key to sign the JWT
 
     public String extractUserEmail(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject); // we use the extractClaim() method to extract the subject from the JWT, which is the user email

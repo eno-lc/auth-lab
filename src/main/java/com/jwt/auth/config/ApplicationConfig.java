@@ -32,21 +32,21 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception { // we use authentication manager to authenticate the user
+        return configuration.getAuthenticationManager(); // we get the authentication manager from the configuration
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+    public AuthenticationProvider authenticationProvider(){ // we use authentication provider to authenticate the user
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(); // we use Dao authentication provider to authenticate the user
+        authenticationProvider.setUserDetailsService(userDetailsService()); // we set the user details service
+        authenticationProvider.setPasswordEncoder(passwordEncoder()); // we set the password encoder
 
-        return authenticationProvider;
+        return authenticationProvider; // we return the authentication provider
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    } // we use BCrypt password encoder to encode the password
 }

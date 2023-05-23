@@ -39,37 +39,37 @@ public class User implements UserDetails {
     private Role role;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() { // this method is used to get the role of the user
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
-    public String getPassword() {
+    public String getPassword() { // this method is used to get the password of the user
         return password;
     }
 
     @Override
     public String getUsername() {
         return this.email;
-    }
+    } // this method is used to get the username of the user
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
-    }
+    } // this method is used to check if the account of the user is expired
 
     @Override
     public boolean isAccountNonLocked() {
         return true;
-    }
+    } // this method is used to check if the account of the user is locked
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
+    } // this method is used to check if the credentials of the user is expired
 
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    } // this method is used to check if the account of the user is enabled
 }

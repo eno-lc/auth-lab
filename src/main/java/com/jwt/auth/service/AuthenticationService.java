@@ -17,42 +17,42 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository; // we use userRepository to save the user in the database
+    private final PasswordEncoder passwordEncoder; // we use passwordEncoder to encode the password
+    private final JwtService jwtService; // we use jwtService to generate a JWT token
+    private final AuthenticationManager authenticationManager; // we use authenticationManager to authenticate a user
 
-    public AuthenticationResponse register(RegistrationRequest registrationRequest) {
-        User user = User.builder()
-                .firstName(registrationRequest.getFirstName())
+    public AuthenticationResponse register(RegistrationRequest registrationRequest) { // this method is used to register a user
+        User user = User.builder() // we are building a User object
+                .firstName(registrationRequest.getFirstName()) // we are setting the values of the User object
                 .lastName(registrationRequest.getLastName())
                 .email(registrationRequest.getEmail())
-                .password(passwordEncoder.encode(registrationRequest.getPassword()))
-                .role(Role.USER)
+                .password(passwordEncoder.encode(registrationRequest.getPassword())) // we are encoding the password
+                .role(Role.USER) // we are setting the role of the user
                 .build();
 
-        userRepository.save(user);
+        userRepository.save(user); // we are saving the user in the database
 
-        return authenticationResponse(user);
+        return authenticationResponse(user); // we are returning an AuthenticationResponse object
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationRequest.getEmail(),
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) { // this method is used to authenticate a user
+        authenticationManager.authenticate( // we are authenticating the user using the AuthenticationManager
+                new UsernamePasswordAuthenticationToken( // we are creating a UsernamePasswordAuthenticationToken object because we are using username and password for authentication
+                        authenticationRequest.getEmail(), // we are passing the email and password of the user
                         authenticationRequest.getPassword()
                 )
         );
 
         User user = userRepository.findUserByEmail(authenticationRequest.getEmail())
-                .orElseThrow();
+                .orElseThrow(); // we are finding the user by email and throwing an exception if the user is not found
 
-        return authenticationResponse(user);
+        return authenticationResponse(user); // we are returning an AuthenticationResponse object
     }
 
-    public AuthenticationResponse authenticationResponse(User user){
-        String jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+    public AuthenticationResponse authenticationResponse(User user){ // this method is used in both register() and authenticate() methods
+        String jwtToken = jwtService.generateToken(user); // we are generating a JWT token for the user
+        return AuthenticationResponse.builder() // we are building an AuthenticationResponse object and returning it
                 .token(jwtToken)
                 .build();
     }
