@@ -1,6 +1,7 @@
 package com.jwt.auth.config;
 
 import com.jwt.auth.entity.User;
+import com.jwt.auth.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
@@ -41,7 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){ // if the user email is not null and the authentication context is null
             UserDetails user = this.userDetailsService.loadUserByUsername(userEmail); // we load the user details from the user email
-            if(jwtService.isTokenValid(jwtToken, user)){ // if the jwt token is valid
+            boolean isTokenValid = tokenRepository.findByToken(jwtToken)
+                    .map(token -> !token.isExpired() && !token.isRevoked())
+                    .orElse(false);
+            if(jwtService.isTokenValid(jwtToken, user) && isTokenValid){ // if the jwt token is valid and the token is not expired and not revoked
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()); // we create an authentication token with the user details which we use to authenticate the user
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // we set the details of the authentication token to the details of the request
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken); // we set the authentication token to the authentication context
