@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,12 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "6B5970337336763979244226452948404D6351655468576D5A7134743777217A"; // we use the secret key to sign the JWT
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey; // we use the secret key to sign the JWT
+    @Value("${application.security.jwt.expiration}")
+    private Long jwtExpiration;
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private Long refreshExpiration;
 
     public String extractUserEmail(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject); // we use the extractClaim() method to extract the subject from the JWT, which is the user email
@@ -37,13 +43,11 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){ // we pass the extra claims as a Map object
-        return Jwts.builder() // we use the Jwts.builder() method to create a JWT
-                .setClaims(extraClaims) // we set the extra claims
-                .setSubject(userDetails.getUsername()) // we set the subject
-                .setIssuedAt(new Date(System.currentTimeMillis())) // we set the issued date
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // we set the expiration date
-                .signWith(getSignInKey()) // we sign the JWT with the secret key
-                .compact(); // we compact the JWT which means we serialize it to a compact URL-safe string
+        return buildToken(extraClaims, userDetails, jwtExpiration); // we pass the extra claims, the UserDetails object, and the expiration time to the buildToken() method
+    }
+
+    public String generateRefreshToken(UserDetails userDetails){
+        return buildToken(Map.of(), userDetails, refreshExpiration);
     }
 
     public String generateToken(UserDetails userDetails){ // we overload the generateToken() method to accept only the UserDetails object
@@ -51,7 +55,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY); // we decode the secret key from base64 to bytes because the Keys.hmacShaKeyFor() method requires a byte array
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey); // we decode the secret key from base64 to bytes because the Keys.hmacShaKeyFor() method requires a byte array
         return Keys.hmacShaKeyFor(keyBytes); // Keys.hmacShaKeyFor() method returns a Key object that can be used to sign or verify a JWT
     }
 
@@ -66,5 +70,15 @@ public class JwtService {
 
     private Date extractExpiration(String jwtToken) {
         return extractClaim(jwtToken, Claims::getExpiration); // we use the extractClaim() method to extract the expiration date from the JWT
+    }
+
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, Long expiration){
+        return Jwts.builder() // we use the Jwts.builder() method to create a JWT
+                .setClaims(extraClaims) // we set the extra claims
+                .setSubject(userDetails.getUsername()) // we set the subject
+                .setIssuedAt(new Date(System.currentTimeMillis())) // we set the issued date
+                .setExpiration(new Date(System.currentTimeMillis() + expiration)) // we set the expiration date
+                .signWith(getSignInKey()) // we sign the JWT with the secret key
+                .compact(); // we compact the JWT which means we serialize it to a compact URL-safe string
     }
 }
