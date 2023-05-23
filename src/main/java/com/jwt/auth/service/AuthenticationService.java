@@ -33,11 +33,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(user);
-
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return authenticationResponse(user);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
@@ -51,8 +47,11 @@ public class AuthenticationService {
         User user = userRepository.findUserByEmail(authenticationRequest.getEmail())
                 .orElseThrow();
 
-        String jwtToken = jwtService.generateToken(user);
+        return authenticationResponse(user);
+    }
 
+    public AuthenticationResponse authenticationResponse(User user){
+        String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
