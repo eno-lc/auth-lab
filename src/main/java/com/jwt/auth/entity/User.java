@@ -43,7 +43,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { // this method is used to get the role of the user
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getGrantedAuthorities();
     }
 
     @Override
