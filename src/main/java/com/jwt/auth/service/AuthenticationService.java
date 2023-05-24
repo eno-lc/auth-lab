@@ -41,7 +41,7 @@ public class AuthenticationService {
                 .lastName(registrationRequest.getLastName())
                 .email(registrationRequest.getEmail())
                 .password(passwordEncoder.encode(registrationRequest.getPassword())) // we are encoding the password
-                .role(Role.USER) // we are setting the role of the user
+                .role(registrationRequest.getRole()) // we are setting the role of the user
                 .build();
 
         User savedUser = userRepository.save(user);// we are saving the user in the database

@@ -1,5 +1,6 @@
 package com.jwt.auth.dto;
 
+import com.jwt.auth.entity.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,5 @@ public class RegistrationRequest { // we will use this class to receive the regi
     private String lastName;
     private String email;
     private String password;
+    private Role role;
 }
