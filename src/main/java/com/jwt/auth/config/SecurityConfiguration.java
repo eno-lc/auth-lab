@@ -37,21 +37,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests() // we authorize the http requests
                 .requestMatchers("/api/v1/auth/**") // we authorize the requests that start with /api/v1/auth
                 .permitAll() // we permit all the requests that start with /api/v1/auth
-
-                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name()) // we authorize the requests that start with /api/v1/management and the user must have the role ADMIN or MANAGER
-                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name()) // we authorize the requests that start with /api/v1/management and the user must have the authority ADMIN_READ or MANAGER_READ
-                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name()) // we authorize the requests that start with /api/v1/management and the user must have the authority ADMIN_CREATE or MANAGER_CREATE
-                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name()) // we authorize the requests that start with /api/v1/management and the user must have the authority ADMIN_UPDATE or MANAGER_UPDATE
-                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name()) // we authorize the requests that start with /api/v1/management and the user must have the authority ADMIN_DELETE or MANAGER_DELETE
-
-/*
-                .requestMatchers("/api/v1/administrator/**").hasRole(ADMIN.name()) // we authorize the requests that start with /api/v1/administrator and the user must have the role ADMIN
-                .requestMatchers(GET, "/api/v1/administrator/**").hasAuthority(ADMIN_READ.name()) // we authorize the requests that start with /api/v1/administrator and the user must have the authority ADMIN_READ
-                .requestMatchers(POST, "/api/v1/administrator/**").hasAuthority(ADMIN_CREATE.name()) // we authorize the requests that start with /api/v1/administrator and the user must have the authority ADMIN_CREATE
-                .requestMatchers(PUT, "/api/v1/administrator/**").hasAuthority(ADMIN_UPDATE.name()) // we authorize the requests that start with /api/v1/administrator and the user must have the authority ADMIN_UPDATE
-                .requestMatchers(DELETE, "/api/v1/administrator/**").hasAuthority(ADMIN_DELETE.name()) // we authorize the requests that start with /api/v1/administrator and the user must have the authority ADMIN_DELETE
-*/
-
                 .anyRequest() // any other request
                 .authenticated() // must be authenticated
                 .and()

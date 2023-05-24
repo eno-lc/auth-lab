@@ -39,6 +39,16 @@ public class AuthApplication {
 
 			System.out.println("Manager Token: " + authenticationService.register(manager).getAccessToken());
 
+			var user = RegistrationRequest.builder()
+					.firstName("User")
+					.lastName("User")
+					.email("user@gmail.com")
+					.password("password")
+					.role(Role.USER)
+					.build();
+
+			System.out.println("User Token: " + authenticationService.register(user).getAccessToken());
+
 		};
 	}
 }
