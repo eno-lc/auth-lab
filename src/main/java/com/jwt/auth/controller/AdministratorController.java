@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/administrator")
 @PreAuthorize("hasRole('ADMIN')")
-@SecurityRequirement(name = "BearerAuth")
 public class AdministratorController {
 
     @GetMapping
