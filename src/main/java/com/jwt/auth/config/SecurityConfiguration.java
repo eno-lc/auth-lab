@@ -4,7 +4,6 @@ import com.jwt.auth.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,10 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.jwt.auth.entity.enums.Permission.*;
-import static com.jwt.auth.entity.enums.Role.ADMIN;
-import static com.jwt.auth.entity.enums.Role.MANAGER;
-import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +30,19 @@ public class SecurityConfiguration {
         http
                 .csrf().disable() // we disable csrf because we are using JW, so we don't need csrf because we are not using cookies
                 .authorizeHttpRequests() // we authorize the http requests
-                .requestMatchers("/api/v1/auth/**") // we authorize the requests that start with /api/v1/auth
+                .requestMatchers(
+                        "/api/v1/auth/**",
+                        "/v2/api-docs",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/webjars/**"
+                ) // we authorize the requests that start with /api/v1/auth
                 .permitAll() // we permit all the requests that start with /api/v1/auth
                 .anyRequest() // any other request
                 .authenticated() // must be authenticated
